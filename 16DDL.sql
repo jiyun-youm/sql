@@ -1,0 +1,61 @@
+--DDL문장 (트랜잭션이 없습니다)
+--CREATE, ALTER, DROP, TRUNCATE
+
+DROP TABLE DEPTS;
+
+CREATE TABLE DEPTS (
+    DEPT_NO NUMBER(2), --정수 2자리
+    DEPTS_NAME VARCHAR2(30), --30BYTE(한글15, 영어 30)
+    DEPT_YN CHAR(1), --고정문자열 1BYTE(VARCHAR로 대체 가능)
+    DEPT_DATE DATE,
+    DEPT_BONUS NUMBER(10,2), --전체유효자리는 10자리, 소수점 두자리까지 사용할 수 있음
+    DEPT_CONTENT LONG
+    
+);
+INSERT INTO DEPTS VALUES(99,'HELLO','Y',SYSDATE,3.14,'HELLO WORLD~~');
+INSERT INTO DEPTS VALUES(100,'HELLO','Y',SYSDATE,3.14,'HELLO WORLD~~'); --DEPT_NO 초과
+INSERT INTO DEPTS VALUES(10,'HELLO','가',SYSDATE,3.14,'HELLO WORLD~~'); --DEPT_YN 초과
+
+--------------------------------------------------------------------------------
+--컬럼추가 ADD
+ALTER TABLE DEPTS ADD (DEPT_COUNT NUMBER(3));
+SELECT * FROM DEPTS;
+--컬럼이름변경 RENAME COLUMN TO
+ALTER TABLE DEPTS RENAME COLUMN DEPT_COUNT TO DEPT_CNT;
+--컬럼수정하기 MODIFY
+ALTER TABLE DEPTS MODIFY (DEPT_CNT NUMBER(10));
+ALTER TABLE DEPTS MODIFY (DEPTS_NAME VARCHAR2(1));
+--컬럼 삭제하기 DROP
+ALTER TABLE DEPTS DROP COLUMN DEPT_CNT;
+--------------------------------------------------------------------------------
+--테이블 삭제
+DROP TABLE DEPTS;
+DROP TABLE DEPARTMENTS; --FK제약이 걸려있기 때문에 삭제가 안됨!
+DROP TABLE DEPARTMENTS CASCADE 제약조건명; --FK 제약 걸려있는거 삭제하고 드랍함
+
+--------------------------------------------------------------------------------
+
+--테이블명 DEPT2
+--1. 테이블을 생성하세요.
+--DEPT_NO 숫자타입 3글자
+--DEPT_NAME 가변형문자 15바이트
+--LOCA_NUMBER 숫자타입 4글자
+--DEPT_GENDER 고정문자 1글자
+--REG_DATE 날짜타입
+--DEPT_BONUS 실수 5자리까지
+CREATE TABLE DEPTS(
+    DEPT_NO NUMBER(3),
+    DEPT_NAME VARCHAR2(15),
+    LOCA_NUMBER NUMBER(4),
+    DEPT_GENDER CHAR(1),
+    REG_DATE DATE,
+    DEPT_BONUS NUMBER(5)
+);
+--2. DEPT_BONUS를 DEPT_CMT로 변경하세요
+ALTER TABLE DEPTS RENAME COLUMN DEPT_BONUS TO DEPT_CMT;
+--3. DEPT_ADDR를 추가하세요.
+ALTER TABLE DEPTS ADD (DEPT_ADDR VARCHAR2(30));
+--4. INSERT를 1행만 진행하세요.
+INSERT INTO DEPTS VALUES (3,'가',3,'A',SYSDATE,3,'가');
+--5. 테이블을 드랍하세요. 
+DROP TABLE DEPTS;

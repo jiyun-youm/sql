@@ -50,4 +50,67 @@ WHERE EMPLOYEE_ID IN (SELECT EMPLOYEE_ID FROM EMPLOYEES WHERE JOB_ID='IT_PROG');
 DELETE FROM EMPS
 WHERE JOB_ID='IT_PROG';
 --모든 행이 삭제가 되는 것은 아니다. 테이블이 연관관계를 가지고 있다면, 참조 무결성 제약에 위배되는 경우에 삭제되지 않습니다
-DELETE FROM DEPARTMENTS WHERE DEPARTMENT_ID=90 --90번 데이터는 사용중이라 삭제 안됨
+DELETE FROM DEPARTMENTS WHERE DEPARTMENT_ID=90; --90번 데이터는 사용중이라 삭제 안됨
+--------------------------------------------------------------------------------
+--MERGE문-데이터를 비교해서 있으면 UPDATE, 없으면 INSERT하는 형태로 사용됨
+
+MERGE INTO EMPS E1 --타겟테이블
+USING (SELECT * FROM EMPLOYEES WHERE JOB_ID='IT_PROG') E2--병합할 서브쿼리 문장
+ON (E1.EMPLOYEE_ID=E2.EMPLOYEE_ID) --E1과 E2가 연결될 조건
+WHEN MATCHED THEN--일치할 때 처리할 구문
+    UPDATE SET E1.SALARY=E2.SALARY,
+               E1.COMMISSION_PCT=E2.COMMISSION_PCT
+               --.......생략
+WHEN NOT MATCHED THEN--일치하지 않을 때 처리할 구문
+    INSERT (EMPLOYEE_ID,LAST_NAME,EMAIL,HIRE_DATE,JOB_ID)
+    VALUES (E2.EMPLOYEE_ID, E2.LAST_NAME, E2.EMAIL, E2. HIRE_DATE, E2.JOB_ID);
+
+SELECT * FROM EMPS;
+--2ND-서브쿼리절로 다른 테이블을 가져오는게 아니고, 직접 데이터를 병합하는 경우는 DUAL 테이블을 사용함
+MERGE INTO EMPS E1
+USING DUAL
+ON (E1.EMPLOYEE_ID=105)--고유한 대상을 지칭할 수 있는 키가 들어갑니다
+WHEN MATCHED THEN
+    UPDATE SET E1.SALARY=10000,E1.HIRE_DATE=SYSDATE
+WHEN NOT MATCHED THEN
+    INSERT (EMPLOYEE_ID,LAST_NAME, EMAIL,HIRE_dATE,JOB_ID) 
+    VALUES(200,'TEST','TEST',SYSDATE,'TEST');
+--------------------------------------------------------------------------------
+--테이블 복사 구문은 KEY는 복사하지 않습니다
+CREATE TABLE EMPS2 AS (SELECT * FROM EMPS);--구조와 데이터 복사
+DROP TABLE EMPS2;
+CREATE TABLE EMPS2 AS (SELECT * FROM EMPS WHERE 1=2);--구조만 복사
+SELECT * FROM EMPS2;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
